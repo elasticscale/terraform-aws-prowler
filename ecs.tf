@@ -11,22 +11,11 @@ resource "aws_ecs_task_definition" "taskdef" {
   for_each                 = toset(var.account_ids)
   family                   = "${var.prefix}-prowler-${each.value}"
   task_role_arn            = aws_iam_role.taskrole[each.key].arn
-  execution_role_arn       = aws_iam_role.executionrole[each.key].arn
+  execution_role_arn       = aws_iam_role.executionrole.arn
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 1024
   memory                   = 2048
-  volume {
-    name = "scanresults"
-    efs_volume_configuration {
-      file_system_id     = aws_efs_file_system.efs.id
-      transit_encryption = "ENABLED"
-      authorization_config {
-        access_point_id = aws_efs_access_point.accesspoint.id
-        iam             = "ENABLED"
-      }
-    }
-  }
   container_definitions = jsonencode([
     {
       name      = "prowler"
@@ -34,7 +23,7 @@ resource "aws_ecs_task_definition" "taskdef" {
       cpu       = 1024
       memory    = 2048
       essential = true
-      command   = ["aws", "-M", "csv", "html", "-B", "prowler-scanner-scanresults/"]
+      command   = ["aws", "-S", "-q", "-R", aws_iam_role.securityhubrole[each.key].arn]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -44,12 +33,7 @@ resource "aws_ecs_task_definition" "taskdef" {
           awslogs-stream-prefix = "prowler"
         }
       }
-      mountPoints = [
-        {
-          sourceVolume  = "scanresults"
-          containerPath = "/scanresults"
-        }
-      ]
+      
     },
   ])
 }
