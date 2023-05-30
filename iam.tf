@@ -1,5 +1,4 @@
 resource "aws_iam_role" "taskrole" {
-  depends_on = [ aws_iam_role.securityhubrole ]
   for_each = toset(var.account_ids)
   name     = "${var.prefix}-assumerole-${each.value}"
   assume_role_policy = jsonencode({
@@ -30,9 +29,9 @@ resource "aws_iam_role" "taskrole" {
   }
 }
 
-resource "aws_iam_role" "securityhubrole" {
+resource "aws_iam_role" "eventbridgerole" {
   for_each = toset(var.account_ids)
-  name     = "${var.prefix}-securityhub-${each.value}"
+  name     = "${var.prefix}-eventbridge-${each.value}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -40,21 +39,26 @@ resource "aws_iam_role" "securityhubrole" {
         Effect = "Allow"
         Action = "sts:AssumeRole"
         Principal = {
-          AWS = "arn:aws:iam::${var.security_account_id}:role/${var.prefix}-assumerole-${each.value}"
+          Service = "events.amazonaws.com"
         }
       }
     ]
   })
   inline_policy {
-    name = "${var.prefix}-securityhub-policy"
+    name = "${var.prefix}-eventbridge-policy"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
 
         {
           Effect   = "Allow"
-          Action   = ["securityhub:BatchImportFindings", "securityhub:GetFindings"]
+          Action   = "iam:PassRole"
           Resource = "*"
+        },
+        {
+          Effect   = "Allow"
+          Action   = "ecs:RunTask"
+          Resource = replace(aws_ecs_task_definition.taskdef[each.key].arn, "/:\\d+$/", ":*")
         }
       ]
     })
@@ -62,7 +66,7 @@ resource "aws_iam_role" "securityhubrole" {
 }
 
 resource "aws_iam_role" "executionrole" {
-  name     = "${var.prefix}-executionrole"
+  name = "${var.prefix}-executionrole"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -76,7 +80,7 @@ resource "aws_iam_role" "executionrole" {
     ]
   })
   inline_policy {
-    name = "${var.prefix}-prowler-policy"
+    name = "${var.prefix}-execution-policy"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [

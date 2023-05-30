@@ -23,17 +23,17 @@ resource "aws_ecs_task_definition" "taskdef" {
       cpu       = 1024
       memory    = 2048
       essential = true
-      command   = ["aws", "-S", "-q", "-R", aws_iam_role.securityhubrole[each.key].arn]
+      command   = ["aws", "-S", "-q", "-R", "arn:aws:iam::${each.value}:role/${var.prefix}-scanrole"]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
           awslogs-group         = "${var.prefix}-prowler-${each.value}"
-          awslogs-region        = var.region
+          awslogs-region        = data.aws_region.current.name
           awslogs-create-group  = "true"
           awslogs-stream-prefix = "prowler"
         }
       }
-      
+
     },
   ])
 }

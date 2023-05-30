@@ -4,21 +4,20 @@ variable "prefix" {
 }
 
 variable "security_account_id" {
-  type = string
+  type    = string
   default = "564033685323"
 }
 
 variable "account_ids" {
   type    = list(string)
-  default = ["564033685323"]
+  default = ["564033685323", "881042394954", "894243019954"]
 }
-
-variable "region" {
-  type    = string
-  default = "eu-west-1"
-}
-
 variable "use_nat_gateway" {
-  type = bool
+  type    = bool
   default = false
+}
+
+variable "schedule_expression" {
+  type    = string
+  default = "cron(0 3 * * ? *)"
 }
