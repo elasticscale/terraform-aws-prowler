@@ -34,7 +34,7 @@ resource "aws_ecs_task_definition" "taskdef" {
       cpu       = 1024
       memory    = 2048
       essential = true
-      command   = ["aws", "-M", "csv", "json", "json-asff", "html", "-o", "/scanresults"]
+      command   = ["aws", "-M", "csv", "html", "-B", "prowler-scanner-scanresults/"]
       logConfiguration = {
         logDriver = "awslogs"
         options = {

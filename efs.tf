@@ -11,7 +11,7 @@ module "efs_sg" {
     {
       rule                     = "nfs-tcp"
       source_security_group_id = module.datasync_sg.security_group_id
-    },    
+    },
   ]
   // todo lockdown?
   egress_rules = ["all-all"]

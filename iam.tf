@@ -73,7 +73,7 @@ resource "aws_iam_role" "executionrole" {
 }
 
 resource "aws_iam_role" "datasync" {
-  name     = "${var.prefix}-datasyncrole"
+  name = "${var.prefix}-datasyncrole"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
