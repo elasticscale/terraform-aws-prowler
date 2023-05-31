@@ -49,11 +49,10 @@ resource "aws_iam_role" "eventbridgerole" {
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
-
         {
           Effect   = "Allow"
           Action   = "iam:PassRole"
-          Resource = "*"
+          Resource = [aws_iam_role.taskrole[each.key].arn, aws_iam_role.executionrole.arn]
         },
         {
           Effect   = "Allow"
@@ -96,7 +95,6 @@ resource "aws_iam_role" "executionrole" {
             "arn:aws:logs:*:*:*"
           ]
         },
-
       ]
     })
   }

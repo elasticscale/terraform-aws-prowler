@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "cluster" {
 resource "aws_ecs_task_definition" "taskdef" {
   depends_on               = [aws_iam_role.taskrole, aws_iam_role.executionrole]
   for_each                 = toset(var.account_ids)
-  family                   = "${var.prefix}-prowler-${each.value}"
+  family                   = "${var.prefix}-${each.value}"
   task_role_arn            = aws_iam_role.taskrole[each.key].arn
   execution_role_arn       = aws_iam_role.executionrole.arn
   requires_compatibilities = ["FARGATE"]
@@ -33,7 +33,6 @@ resource "aws_ecs_task_definition" "taskdef" {
           awslogs-stream-prefix = "prowler"
         }
       }
-
     },
   ])
 }
