@@ -1,27 +1,27 @@
 ## Description
 
-This module creates an ECS cluster with EventBridge scheduled tasks to run Prowler scans on your AWS environments. You provision this module in a security account and specify what accounts you want to scan. 
+This module creates an ECS cluster with EventBridge scheduled cron that starts ECS tasks to run Prowler scans on your AWS environments. You provision this module in a security account and specify what accounts you want to scan. 
 
 Steps:
 
 1. Enable Security Hub in every account (without AWS config to save costs) and setup the security account as delegated administrator to centralize the findings
 2. Enable the Prowler integration in Security Hub
-3. Create IAM roles with these permissions
+3. Create IAM roles in the accounts you want to scan with these permissions
     1. arn:aws:iam::aws:policy/SecurityAudit
     2. arn:aws:iam::aws:policy/job-function/ViewOnlyAccess
     3. [The custom policy mentioned here](https://github.com/prowler-cloud/prowler/blob/master/permissions/prowler-additions-policy.json)
     4. [Security hub access](https://github.com/prowler-cloud/prowler/blob/master/permissions/prowler-security-hub.json)
-4. Use the following trust policy for the IAM role
+4. Use the following trust policy for the IAM roles
 
         {
-        "Version": "2012-10-17",
-        "Statement": [{
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": "arn:aws:iam::SECURITYACCOUNTID:role/prowler-scanner-assumerole-SCANACCOUNTID"
-            },
-            "Action": "sts:AssumeRole"
-        }]
+            "Version": "2012-10-17",
+            "Statement": [{
+                "Effect": "Allow",
+                "Principal": {
+                    "AWS": "arn:aws:iam::SECURITYACCOUNTID:role/prowler-scanner-assumerole-SCANACCOUNTID"
+                },
+                "Action": "sts:AssumeRole"
+            }]
         }
 
 If you need more help: [For an extensive write-up check out my blog (this included troubleshooting tips)](https://elasticscale.cloud/en/terraform-module-for-prowler-security-scans/)
