@@ -3,7 +3,7 @@ module "prowler" {
   source = "../../"
   security_account_id = "496492991232"
   account_ids         = ["496492991232"]
-  schedule_expression = "rate(5 minutes)"
+  schedule_expression = "rate(1 day)"
   use_nat_gateway = false
   prefix = "prowler-cheap"
 }
