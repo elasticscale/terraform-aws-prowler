@@ -1,4 +1,5 @@
-// this module scans the account its run in (you still need to create the scanrole manually in 564033685323)
+// this module scans the account its run in (you still need to create the scanrole manually in 564033685323 named prowler-cheap-scanrole 
+// the role needs to have a trust relationship with the security account (564033685323)
 module "prowler" {
   source = "../../"
   security_account_id = "496492991232"
