@@ -26,7 +26,6 @@ Steps:
 
 If you need more help: [For an extensive write-up check out my blog (this included troubleshooting tips)](https://elasticscale.cloud/en/terraform-module-for-prowler-security-scans/)
 
-
 ## About ElasticScale
 
 ElasticScale is a Solutions Architecture as a Service focusing on start-ups and scale-ups. For a fixed monthly subscription fee, we handle all your AWS workloads. Some services include:
@@ -41,7 +40,7 @@ You can **pause** the subscription at any time and have **direct access** to cer
 
 Check out our <a href="https://elasticscale.cloud" target="_blank" style="color: #14dcc0; text-decoration: underline">website</a> for more information.
 
-<img src="https://elasticscale-public.s3.eu-west-1.amazonaws.com/logo/Logo_ElasticScale_4kant-transparant.png" alt="ElasticScale logo" width="150"/>
+<img src="https://static.elasticscale.io/logo/square/elasticscale_logo_transparent.png" alt="ElasticScale logo" width="150"/>
 
 ## Providers
 
